@@ -1,7 +1,7 @@
 import tensorflow as tf
 from fast_attention import SelfAttention
 from normalization import LayerScaling, LayerCentering
-from tensorflow.keras.layers.experimental import SyncBatchNormalization
+from tensorflow.keras.layers import SyncBatchNormalization
 
 
 def shape_list(x):
