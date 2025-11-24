@@ -1,6 +1,10 @@
-# Tested with Python 3.8.10
-absl-py==2.3.1
-numpy==1.24.3
-scipy==1.10.1
-h5py==3.11.0
-tensorflow==2.13.0
+# Tested with Python 3.8.10 (original)
+# Updated for Python 3.11 compatibility (Kaggle)
+# TensorFlow 2.13.0 does not support Python 3.11, upgraded to 2.15.0+
+# For Python 3.8-3.10, use: tensorflow==2.13.0, numpy==1.24.3
+# For Python 3.11+, use the versions below:
+absl-py>=2.0.0
+numpy>=1.24.0,<2.0.0
+scipy>=1.10.0
+h5py>=3.8.0
+tensorflow>=2.15.0,<2.17.0
