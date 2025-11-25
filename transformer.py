@@ -299,7 +299,7 @@ class Transformer(tf.keras.Model):
                                              d_head=self.d_head_softmax)
         self.fc_output = tf.keras.layers.Dense(self.n_classes)
 
-    def call(self, inp, softmax_attn_smoothing=1, training=False):
+    def call(self, inp, *, softmax_attn_smoothing=1.0, training=False):
         # convert the input dimension from [bsz, len] to [bsz, len, 1]
         inp = tf.expand_dims(inp, axis=-1)
 
