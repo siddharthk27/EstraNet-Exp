@@ -240,7 +240,11 @@ def train(train_dataset, eval_dataset, num_train_batch, num_eval_batch, strategy
             lbls = tf.squeeze(lbls)
             with tf.GradientTape() as tape:
                 softmax_attn_smoothing = 1. #tf.minimum(float(global_step)/FLAGS.train_steps, 1.)
-                logits = model(inps, softmax_attn_smoothing, training=True)[0]
+                logits = model(
+                    inps,
+                    softmax_attn_smoothing=softmax_attn_smoothing,
+                    training=True
+                )[0]
                 if FLAGS.dataset == 'CHES20':
                     per_example_loss = tf.reduce_mean(
                         tf.nn.sigmoid_cross_entropy_with_logits(lbls, logits),
