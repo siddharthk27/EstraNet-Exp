@@ -311,7 +311,7 @@ class Transformer(tf.keras.Model):
 
         bsz, slen = shape_list(inp)[:2]
 
-        pos_ft, pos_ft_slopes = self.pos_feature(slen, bsz)
+        pos_ft, pos_ft_slopes = self.pos_feature(slen, bsz=bsz)
 
         core_out = inp
         out_list = []
