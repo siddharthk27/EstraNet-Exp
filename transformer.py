@@ -1,7 +1,11 @@
 import tensorflow as tf
 from fast_attention import SelfAttention
 from normalization import LayerScaling, LayerCentering
-from tensorflow.keras.layers import SyncBatchNormalization
+
+try:
+    from tensorflow.keras.layers import SyncBatchNormalization
+except ImportError:  # TF >= 2.15 moves the class out of the public API
+    SyncBatchNormalization = tf.keras.layers.BatchNormalization
 
 
 def shape_list(x):
