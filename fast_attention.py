@@ -138,19 +138,19 @@ class SelfAttention(tf.keras.layers.Layer):
         attention_initializer = _glorot_initializer(self.d_model, self.n_head*self.size_per_head)
 
         self.value_weight = self.add_weight(
-                "value_weight",
-                shape=(self.d_model, self.n_head, self.size_per_head),
-                initializer=attention_initializer,
-                dtype=tf.float32,
-                trainable=True)
+            name="value_weight",
+            shape=(self.d_model, self.n_head, self.size_per_head),
+            initializer=attention_initializer,
+            dtype=tf.float32,
+            trainable=True)
         self.pos_ft_weight = self.add_weight(
-                "pos_ft_weight",
-                shape=(self.d_model, self.n_head, self.size_per_head),
-                initializer=attention_initializer,
-                dtype=tf.float32,
-                trainable=False)
+            name="pos_ft_weight",
+            shape=(self.d_model, self.n_head, self.size_per_head),
+            initializer=attention_initializer,
+            dtype=tf.float32,
+            trainable=False)
         self.pos_ft_scale = self.add_weight(
-            "pos_ft_scale",
+            name="pos_ft_scale",
             shape=(1, 1, self.n_head, 1),
             initializer=tf.keras.initializers.Constant(1),
             dtype=tf.float32,
@@ -161,7 +161,7 @@ class SelfAttention(tf.keras.layers.Layer):
         head_range = head_right - head_left
         head_pos = tf.range(head_left+head_range/(2.*self.n_head), head_right, head_range/self.n_head)
         self.pos_ft_offsets = self.add_weight(
-            "pos_ft_offests",
+            name="pos_ft_offests",
             shape=(1, 1, self.n_head, 1),
             initializer=tf.keras.initializers.Constant(head_pos),
             dtype=tf.float32,
@@ -169,11 +169,11 @@ class SelfAttention(tf.keras.layers.Layer):
 
         output_initializer = _glorot_initializer(self.n_head*self.size_per_head, self.d_model)
         self.output_weight = self.add_weight(
-                "output_weight",
-                shape=(self.n_head*self.size_per_head, self.d_model),
-                initializer=output_initializer,
-                dtype=tf.float32,
-                trainable=True)
+            name="output_weight",
+            shape=(self.n_head*self.size_per_head, self.d_model),
+            initializer=output_initializer,
+            dtype=tf.float32,
+            trainable=True)
         self.output_dropout = tf.keras.layers.Dropout(self.attention_dropout)
 
         seed = np.random.randint(1e8, dtype=np.int32)
@@ -181,7 +181,7 @@ class SelfAttention(tf.keras.layers.Layer):
                   self.d_kernel_map, self.size_per_head, seed=seed)
         initializer = tf.keras.initializers.Constant(projection_matrix)
         self.projection_matrix = self.add_weight(
-            "projection_matrix",
+            name="projection_matrix",
             shape=projection_matrix.shape,
             initializer=initializer,
             dtype=projection_matrix.dtype,
