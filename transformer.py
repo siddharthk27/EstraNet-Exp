@@ -21,19 +21,9 @@ class PositionalFeature(tf.keras.layers.Layer):
         self.slopes = tf.range(d_feature, 0, -4.0, dtype=tf.float32) / d_feature
         self.slopes = self.slopes * beta_hat_2
 
-    # Changed: slen is now expected as a keyword argument implicitly or explicitly
     def call(self, slen, bsz=None):
-        # slen might be an int or a Tensor. tf.cast handles both safely.
-        # tf.range handles both safely.
         pos_seq = tf.range(0, slen, 1.0, dtype=tf.float32)
-        
-        # FIX: Replace Python float() with tf.cast to handle both ints and Tensors
-        denom = tf.cast(slen - 1, dtype=tf.float32)
-        # Avoid division by zero if slen is 1
-        denom = tf.maximum(denom, 1.0) 
-        
-        normalized_slopes = (1. / denom) * self.slopes
-        
+        normalized_slopes = (1. / float(slen-1)) * self.slopes
         forward = tf.einsum("i,j->ij", pos_seq, normalized_slopes)
         backward = tf.reverse(forward, axis=[0])
         neg_forward = -tf.identity(forward)
@@ -45,9 +35,7 @@ class PositionalFeature(tf.keras.layers.Layer):
                                -tf.identity(normalized_slopes),
                                -tf.identity(normalized_slopes),
                                tf.identity(normalized_slopes)], axis=0)
-        
-        # FIX: Use tf.cast here as well
-        pos_feature_slopes = tf.cast(slen-1, dtype=tf.float32) * tf.reshape(pos_feature_slopes, [1, -1])
+        pos_feature_slopes = float(slen-1)*tf.reshape(pos_feature_slopes, [1, -1])
 
         if bsz is not None:
             pos_feature = tf.tile(pos_feature[None, :, :], [bsz, 1, 1])
@@ -323,7 +311,7 @@ class Transformer(tf.keras.Model):
 
         bsz, slen = shape_list(inp)[:2]
 
-        pos_ft, pos_ft_slopes = self.pos_feature(slen=slen, bsz=bsz)
+        pos_ft, pos_ft_slopes = self.pos_feature(slen, bsz=bsz) 
 
         core_out = inp
         out_list = []
